@@ -5,7 +5,8 @@ from theano import tensor
 from theano.sandbox.rng_mrg import MRG_RandomStreams
 
 from blocks.bricks import MLP, Identity
-from blocks.graph import apply_noise, ComputationGraph
+from blocks.graph import (apply_noise, apply_batch_normalization,
+                          ComputationGraph)
 from blocks.initialization import Constant
 from tests.bricks.test_bricks import TestBrick
 
@@ -122,3 +123,14 @@ def test_snapshot():
     cg = ComputationGraph(y)
     snapshot = cg.get_snapshot(dict(x=numpy.zeros((1, 10), dtype=floatX)))
     assert len(snapshot) == 14
+
+
+def test_apply_batch_normalization():
+    x = tensor.matrix()
+    y = 2 * x
+
+    cg = ComputationGraph([y])
+    cg_bn = apply_batch_normalization(cg, [x], [2], [-1])
+    assert_allclose(
+        cg_bn.outputs[0].eval({x: [[1, 2], [3, 4]]}),
+        [[-6, -6], [2, 2]])
