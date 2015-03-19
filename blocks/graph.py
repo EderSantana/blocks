@@ -13,7 +13,7 @@ from theano.scan_module.scan_op import Scan
 from toolz import unique
 
 from blocks import config
-from blocks.roles import add_role, has_roles, AUXILIARY, PARAMETER, DROPOUT
+from blocks.roles import add_role, has_roles, AUXILIARY, PARAMETER, DROPOUT, BN
 from blocks.utils import (is_graph_input, is_shared_variable, dict_union,
                           shared_like)
 
@@ -604,7 +604,7 @@ def apply_batch_normalization(computation_graph, variables, gammas,
         for var, mu, sigma_sqr, gamma, beta in
         zip(variables, means, variances, gammas, betas)]
     for variable, replacement in replacements:
-        add_role(replacement, DROPOUT)
+        add_role(replacement, BN)
         replacement.tag.replacement_of = variable
 
     return computation_graph.replace(replacements)

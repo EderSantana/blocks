@@ -133,3 +133,10 @@ class DropoutRole(VariableRole):
 
 #: Inputs with applied dropout
 DROPOUT = DropoutRole()
+
+
+class BatchNormalizationRole(VariableRole):
+    pass
+
+#: Inputs with batch normalization applied
+BN = BatchNormalizationRole()
